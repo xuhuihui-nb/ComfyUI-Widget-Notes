@@ -1,5 +1,6 @@
 # ComfyUI-Widget-Notes
 一个轻量级的ComfyUI扩展，用于直接在节点参数（小部件）下添加内联注释
+
 A lightweight ComfyUI extension for adding inline comments directly under node parameters (widgets)
 
 示例example

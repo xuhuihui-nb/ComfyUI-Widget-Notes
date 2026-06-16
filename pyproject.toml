@@ -1,7 +1,7 @@
 [project]
 name = "widget-notes" 
 description = "Node parameter annotation plugin"
-version = "1.0.0" # 初始版本号
+version = "1.0.1" # 版本号
 dependencies = [] # 如果你的插件不需要额外 pip 安装第三方库，这里留空。如果需要，写成 ["requests", "numpy"] 这样。
 
 [project.urls]

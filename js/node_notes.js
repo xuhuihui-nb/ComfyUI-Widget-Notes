@@ -5,6 +5,77 @@ console.log("ComfyUI-NodeNotes: Loading extension with Object.defineProperty com
 // WeakMap to keep track of wrapped widgets to prevent recursive nesting recursion
 const wrappedWidgets = new WeakMap();
 
+// ---------------------------------------------------------------------------
+// Exclusion list: these 4 categories of nodes are skipped entirely.
+// 1. Image preview nodes  2. Image load nodes
+// 3. 3-D model preview nodes  4. Note / annotation nodes
+// ---------------------------------------------------------------------------
+
+/** Exact class_type names that should be excluded */
+const EXCLUDED_NODE_TYPES = new Set([
+    // ── Image preview ──────────────────────────────────────────────
+    "PreviewImage",
+    "SaveImage",
+    "ImagePreviewFromLatent+",
+    "MaskPreview+",
+    "AiLab_Preview",
+    "AiLab_ImagePreview",
+    "AiLab_MaskPreview",
+    "TextPreview",
+    "PreviewAudio",
+    // ── Image load ─────────────────────────────────────────────────
+    "LoadImage",
+    "LoadImageMask",
+    "LoadImageOutput",
+    "LoadImageWithSwitch",
+    "LoadImageMaskWithSwitch",
+    "LoadImageWithoutListDir",
+    "LoadImageMaskWithoutListDir",
+    "AiLab_LoadImage",
+    "Load3D",
+    "Load3DAnimation",
+    // ── 3-D model preview ──────────────────────────────────────────
+    "Preview3D",
+    "Preview3DAnimation",
+    // ── Note / annotation (ComfyUI built-in) ───────────────────────
+    "Note",
+]);
+
+/**
+ * Returns true if the plugin should leave this node completely untouched.
+ * Matches against the exact class_type set above, and also against
+ * name patterns so that future variants are caught automatically.
+ */
+function isExcludedNode(node) {
+    if (!node) return false;
+
+    // Resolve the node's class identifier (works for regular nodes and group nodes)
+    const classType = node.comfyClass || node.type || "";
+
+    // 1. Exact match
+    if (EXCLUDED_NODE_TYPES.has(classType)) return true;
+
+    // 2. Pattern match for forward-compatibility
+    //    - Preview image: ends with or contains "PreviewImage", "ImagePreview", "MaskPreview"
+    //    - Load image:    starts with "LoadImage" or "Load3D"
+    //    - 3D preview:    starts with "Preview3D"
+    //    - Note:          exact "Note" (already in set) or type === "Note"
+    if (
+        /PreviewImage$/.test(classType) ||
+        /ImagePreview$/.test(classType) ||
+        /MaskPreview/.test(classType)   ||
+        /^LoadImage/.test(classType)    ||
+        /^Load3D/.test(classType)       ||
+        /^Preview3D/.test(classType)    ||
+        node.type === "Note"
+    ) {
+        return true;
+    }
+
+    return false;
+}
+// ---------------------------------------------------------------------------
+
 // Helper function to draw wrapped text with CJK and English support
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
     const lines = text.split('\n');
@@ -532,6 +603,7 @@ function wrapWidgetComputeSize(widget, node) {
 }
 
 function wrapAllNodeWidgets(node) {
+    if (isExcludedNode(node)) return; // skip excluded node categories
     try {
         if (node && node.widgets) {
             for (let w of node.widgets) {
@@ -547,6 +619,7 @@ function wrapAllNodeWidgets(node) {
 // Set up the note functionality on a node instance
 function setupNodeNotes(node, canvasInstance) {
     if (!node) return;
+    if (isExcludedNode(node)) return; // skip excluded node categories
     if (node.__nodeNotesSetup) return;
     node.__nodeNotesSetup = true;
 
@@ -878,8 +951,10 @@ app.registerExtension({
             const origOnAdded = LGraphNodeClass.prototype.onAdded;
             LGraphNodeClass.prototype.onAdded = function(graph) {
                 try {
-                    setupNodeNotes(this, canvasInstance);
-                    wrapAllNodeWidgets(this);
+                    if (!isExcludedNode(this)) {
+                        setupNodeNotes(this, canvasInstance);
+                        wrapAllNodeWidgets(this);
+                    }
                 } catch (err) {
                     console.error("Error in LGraphNode.prototype.onAdded hook:", err);
                 }
@@ -1060,12 +1135,14 @@ app.registerExtension({
     
     // Triggers when a node is created in the current session
     nodeCreated(node, appInstance) {
+        if (isExcludedNode(node)) return;
         setupNodeNotes(node, appInstance.canvas || app.canvas);
         wrapAllNodeWidgets(node);
     },
     
     // Triggers when a node is loaded from a saved workflow
     loadedGraphNode(node, appInstance) {
+        if (isExcludedNode(node)) return;
         setupNodeNotes(node, appInstance.canvas || app.canvas);
         wrapAllNodeWidgets(node);
     },

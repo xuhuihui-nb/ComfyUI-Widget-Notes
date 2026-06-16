@@ -1,0 +1,14 @@
+{
+    "Trellis2LoadModel_GGUF": {
+        "parameterNotes": {
+            "modelname": {
+                "text": "1",
+                "height": 26.590349079960163
+            }
+        },
+        "size": [
+            290,
+            220
+        ]
+    }
+}

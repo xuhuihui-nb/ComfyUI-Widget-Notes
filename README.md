@@ -4,13 +4,13 @@ A lightweight ComfyUI extension for adding inline comments directly under node p
 
 示例example
 <div align="center">
-  <img width="835" height="914" alt="image" src="https://github.com/user-attachments/assets/0866f144-6c39-4ec1-9d27-739e6f8d3a03" width="50%"/>
+  <img width="835" height="914" alt="image" src="https://github.com/user-attachments/assets/0866f144-6c39-4ec1-9d27-739e6f8d3a03" width="30%"/>
   </div>
 <div align="center">
-  <img width="771" height="805" alt="image" src="https://github.com/user-attachments/assets/fa4e873e-9c7e-4ed2-a6c0-693778427ef5" width="50%"/>
+  <img width="771" height="805" alt="image" src="https://github.com/user-attachments/assets/fa4e873e-9c7e-4ed2-a6c0-693778427ef5" width="30%"/>
   </div>
 <div align="center">
-  <img width="1275" height="1001" alt="image" src="https://github.com/user-attachments/assets/2c6a588b-8321-4cca-9129-31cd9c0ced73" width="50%"/>
+  <img width="1275" height="1001" alt="image" src="https://github.com/user-attachments/assets/2c6a588b-8321-4cca-9129-31cd9c0ced73" width="30%"/>
   </div>
 节点和子图可以同步显示和调整
 

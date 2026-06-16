@@ -1,0 +1,12 @@
+[project]
+name = "widget-notes" 
+description = "Node parameter annotation plugin"
+version = "1.0.0" # 初始版本号
+dependencies = [] # 如果你的插件不需要额外 pip 安装第三方库，这里留空。如果需要，写成 ["requests", "numpy"] 这样。
+
+[project.urls]
+Repository = "https://github.com/xuhuihui-nb/ComfyUI-Widget-Notes" # 例如 https://github.com/你的名字/你的仓库名
+
+[tool.comfy]
+PublisherId = "xuhuihui-nb" # 你在 Comfy Registry 注册时填写的那个唯一的 Publisher ID（不要带 @ 符号）
+DisplayName = "ComfyUI Widget Notes" # 比如 My Awesome Node

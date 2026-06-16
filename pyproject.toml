@@ -10,3 +10,4 @@ Repository = "https://github.com/xuhuihui-nb/ComfyUI-Widget-Notes" # 例如 http
 [tool.comfy]
 PublisherId = "xuhuihui-nb" # 你在 Comfy Registry 注册时填写的那个唯一的 Publisher ID（不要带 @ 符号）
 DisplayName = "ComfyUI Widget Notes" # 比如 My Awesome Node
+
